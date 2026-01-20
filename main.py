@@ -2,7 +2,6 @@ from Lib import point_counters as pc, helpers as h, game as g
 import random
 
 
-
 def roll_dice(n):
     out = []
     for i in range(n):
@@ -27,8 +26,8 @@ def playerTurn(gameSheet):
                     print(f"{behalten} ist ungültig. wähle aus 0 -", len(dice))
                     behalten = None
             if behalten == len(dice):
-                held_dice.append(dice)
-                held_dice = []
+                for die in dice:
+                    held_dice.append(die)
                 break
             for n in range(behalten):
                 choice = dice.pop(
@@ -54,3 +53,6 @@ if gameSheet.getAvailable() is None:
 while len(gameSheet.getAvailable()) > 0:
     playerTurn(gameSheet)
     gameSheet.printTable()
+
+
+# endregion penis
