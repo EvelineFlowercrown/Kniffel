@@ -1,113 +1,202 @@
-from Lib.point_counters import *
+from Lib.point_counters import counts, oberePunkte, dreierPasch, viererPasch, fuenferPasch, fullHouse, kleineStrasse, \
+    grosseStrasse, chance, getPointOptions
+import pytest
 
 
-def test_counts_basic():
-    dice = [1, 2, 2, 5, 6]
-    result = counts(dice)
-    assert result == {
-        1: 1,
-        2: 2,
-        3: 0,
-        4: 0,
-        5: 1,
-        6: 1
-    }
+class TestKniffelFunctions:
+    """Testklasse für die Kniffel/Yahtzee-Funktionen"""
 
+    # Test für counts()
+    def test_counts(self):
+        """Testet die counts Funktion"""
+        assert counts([1, 1, 1, 2, 3]) == {1: 3, 2: 1, 3: 1, 4: 0, 5: 0, 6: 0}
+        assert counts([5, 5, 5, 5, 5]) == {1: 0, 2: 0, 3: 0, 4: 0, 5: 5, 6: 0}
+        assert counts([1, 2, 3, 4, 5]) == {1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 0}
 
-def test_counts_empty():
-    dice = []
-    result = counts(dice)
-    assert all(v == 0 for v in result.values())
+    # Test für oberePunkte()
+    def test_oberePunkte(self):
+        """Testet die oberePunkte Funktion"""
+        counts_dict = {1: 3, 2: 1, 3: 1, 4: 0, 5: 0, 6: 0}
+        assert oberePunkte(counts_dict) == {1: 3, 2: 2, 3: 3, 4: 0, 5: 0, 6: 0}
 
-def test_obere_punkte():
-    dice = [1, 1, 3, 5, 6]
-    c = counts(dice)
-    result = oberePunkte(c)
+        counts_dict = {1: 0, 2: 0, 3: 0, 4: 0, 5: 5, 6: 0}
+        assert oberePunkte(counts_dict) == {1: 0, 2: 0, 3: 0, 4: 0, 5: 25, 6: 0}
 
-    assert result[1] == 2
-    assert result[3] == 3
-    assert result[5] == 5
-    assert result[6] == 6
+    # Test für dreierPasch()
+    def test_dreierPasch(self):
+        """Testet die dreierPasch Funktion"""
+        # Mit Dreierpasch
+        counts_dict = counts([1, 1, 1, 2, 3])
+        assert dreierPasch(counts_dict, [1, 1, 1, 2, 3]) == 8
 
-def test_dreier_pasch_true():
-    dice = [3, 3, 3, 5, 6]
-    assert dreierPasch(counts(dice), dice) == sum(dice)
+        # Ohne Dreierpasch
+        counts_dict = counts([1, 1, 2, 2, 3])
+        assert dreierPasch(counts_dict, [1, 1, 2, 2, 3]) == 0
 
+        # Mit Viererpasch (sollte auch als Dreierpasch zählen)
+        counts_dict = counts([1, 1, 1, 1, 3])
+        assert dreierPasch(counts_dict, [1, 1, 1, 1, 3]) == 7
 
-def test_dreier_pasch_false():
-    dice = [3, 3, 5, 6, 1]
-    assert dreierPasch(counts(dice), dice) == 0
+    # Test für viererPasch()
+    def test_viererPasch(self):
+        """Testet die viererPasch Funktion"""
+        # Mit Viererpasch
+        counts_dict = counts([1, 1, 1, 1, 3])
+        assert viererPasch(counts_dict, [1, 1, 1, 1, 3]) == 7
 
+        # Ohne Viererpasch
+        counts_dict = counts([1, 1, 1, 2, 3])
+        assert viererPasch(counts_dict, [1, 1, 1, 2, 3]) == 0
 
-def test_vierer_pasch_true():
-    dice = [2, 2, 2, 2, 5]
-    assert viererPasch(counts(dice), dice) == sum(dice)
+        # Mit Fünferpasch (sollte auch als Viererpasch zählen)
+        counts_dict = counts([1, 1, 1, 1, 1])
+        assert viererPasch(counts_dict, [1, 1, 1, 1, 1]) == 5
 
+    # Test für fuenferPasch()
+    def test_fuenferPasch(self):
+        """Testet die fuenferPasch Funktion"""
+        # Mit Fünferpasch (Kniffel)
+        counts_dict = counts([1, 1, 1, 1, 1])
+        assert fuenferPasch(counts_dict) == 50
 
-def test_vierer_pasch_false():
-    dice = [2, 2, 2, 5, 6]
-    assert viererPasch(counts(dice), dice) == 0
+        # Ohne Fünferpasch
+        counts_dict = counts([1, 1, 1, 1, 2])
+        assert fuenferPasch(counts_dict) == 0
 
+    # Test für fullHouse()
+    def test_fullHouse(self):
+        """Testet die fullHouse Funktion"""
+        # Mit Full House (3+2)
+        counts_dict = counts([1, 1, 1, 2, 2])
+        assert fullHouse(counts_dict) == 25
 
-def test_kniffel_true():
-    dice = [6, 6, 6, 6, 6]
-    assert fuenferPasch(counts(dice)) == 50
+        # Ohne Full House
+        counts_dict = counts([1, 1, 1, 1, 2])
+        assert fullHouse(counts_dict) == 0
 
+        # Noch ein Full House
+        counts_dict = counts([3, 3, 5, 5, 5])
+        assert fullHouse(counts_dict) == 25
 
-def test_kniffel_false():
-    dice = [6, 6, 6, 6, 5]
-    assert fuenferPasch(counts(dice)) == 0
+    # Test für kleineStrasse()
+    def test_kleineStrasse(self):
+        """Testet die kleineStrasse Funktion"""
+        # Kleine Straße vorhanden (1-2-3-4)
+        assert kleineStrasse([1, 2, 3, 4, 4]) == 30
 
-def test_full_house_true():
-    dice = [2, 2, 3, 3, 3]
-    assert fullHouse(counts(dice)) == 25
+        # Kleine Straße vorhanden (2-3-4-5)
+        assert kleineStrasse([2, 3, 4, 5, 1]) == 30
 
+        # Kleine Straße vorhanden (3-4-5-6)
+        assert kleineStrasse([3, 4, 5, 6, 6]) == 30
 
-def test_full_house_false():
-    dice = [2, 2, 2, 2, 3]
-    assert fullHouse(counts(dice)) == 0
+        # Ohne kleine Straße
+        assert kleineStrasse([1, 3, 4, 5, 6]) == 0
 
-def test_kleine_strasse_true():
-    dice = [1, 2, 3, 4, 6]
-    assert kleineStrasse(dice) == 30
+        # Große Straße (sollte auch kleine Straße sein)
+        assert kleineStrasse([1, 2, 3, 4, 5]) == 30
 
+    # Test für grosseStrasse()
+    def test_grosseStrasse(self):
+        """Testet die grosseStrasse Funktion"""
+        # Große Straße (1-2-3-4-5)
+        assert grosseStrasse([1, 2, 3, 4, 5]) == 40
 
-def test_kleine_strasse_false():
-    dice = [1, 2, 3, 5, 6]
-    assert kleineStrasse(dice) == 0
+        # Große Straße (2-3-4-5-6)
+        assert grosseStrasse([2, 3, 4, 5, 6]) == 40
 
+        # Ohne große Straße
+        assert grosseStrasse([1, 2, 3, 4, 4]) == 0
 
-def test_grosse_strasse_true_1():
-    dice = [1, 2, 3, 4, 5]
-    assert grosseStrasse(dice) == 40
+        # Falsche Reihenfolge sollte trotzdem erkannt werden
+        assert grosseStrasse([5, 4, 3, 2, 1]) == 40
 
+    # Test für chance()
+    def test_chance(self):
+        """Testet die chance Funktion"""
+        assert chance([1, 2, 3, 4, 5]) == 15
+        assert chance([5, 5, 5, 5, 5]) == 25
+        assert chance([1, 1, 1, 1, 1]) == 5
 
-def test_grosse_strasse_true_2():
-    dice = [2, 3, 4, 5, 6]
-    assert grosseStrasse(dice) == 40
+    # Test für getPointOptions()
+    def test_getPointOptions(self):
+        """Testet die getPointOptions Funktion"""
+        dice = [1, 1, 1, 2, 2]
+        available = ["Dreierpasch", "Full House", "Nur 1er zählen", "Chance"]
 
+        result = getPointOptions(dice, available)
 
-def test_grosse_strasse_false():
-    dice = [1, 2, 3, 4, 6]
-    assert grosseStrasse(dice) == 0
+        # Überprüfe, dass alle verfügbaren Optionen enthalten sind
+        option_names = [opt[0] for opt in result]
+        assert "Dreierpasch" in option_names
+        assert "Full House" in option_names
+        assert "Nur 1er zählen" in option_names
+        assert "Chance" in option_names
 
-def test_chance():
-    dice = [1, 2, 3, 4, 6]
-    assert chance(dice) == 16
+        # Überprüfe die Werte
+        expected_values = {
+            "Full House": 25,
+            "Dreierpasch": 7,
+            "Chance": 7,
+            "Nur 1er zählen": 3
+        }
 
-def test_get_point_options_kniffel():
-    dice = [5, 5, 5, 5, 5]
-    options = dict(getPointOptions(dice))
+        for name, value in result:
+            assert value == expected_values[name]
 
-    assert options["Kniffel"] == 50
-    assert options["Chance"] == 25
-    assert options["Nur 5er zählen"] == 25
+    def test_getPointOptions_sorted_descending(self):
+        """Testet, dass getPointOptions absteigend sortiert"""
+        dice = [1, 1, 1, 2, 2]
+        available = ["Dreierpasch", "Full House", "Nur 1er zählen", "Chance"]
 
+        result = getPointOptions(dice, available)
 
-def test_get_point_options_full_house():
-    dice = [2, 2, 3, 3, 3]
-    options = dict(getPointOptions(dice))
+        # Überprüfe Sortierung (absteigend nach Wert)
+        values = [value for _, value in result]
+        assert values == sorted(values, reverse=True)
 
-    assert options["Full House"] == 25
-    assert options["Chance"] == sum(dice)
+    def test_getPointOptions_empty_available(self):
+        """Testet getPointOptions mit leerer available-Liste"""
+        dice = [1, 1, 1, 2, 2]
+        available = []
 
+        result = getPointOptions(dice, available)
+        assert result == []
+
+    def test_getPointOptions_all_options(self):
+        """Testet getPointOptions mit allen möglichen Optionen"""
+        dice = [1, 2, 3, 4, 5]
+        available = [
+            "Kniffel", "Große Straße", "Kleine Straße", "Full House",
+            "Viererpasch", "Dreierpasch", "Nur 1er zählen", "Nur 2er zählen",
+            "Nur 3er zählen", "Nur 4er zählen", "Nur 5er zählen", "Nur 6er zählen",
+            "Chance"
+        ]
+
+        result = getPointOptions(dice, available)
+
+        # Große Straße sollte den höchsten Wert haben (40)
+        assert result[0][0] == "Große Straße"
+        assert result[0][1] == 40
+
+        # Kleine Straße sollte auch einen Wert haben (30)
+        for name, value in result:
+            if name == "Kleine Straße":
+                assert value == 30
+
+    # Edge Cases
+    def test_edge_cases(self):
+        """Testet verschiedene Edge Cases"""
+        # Leere Würfel-Liste
+        assert counts([]) == {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}
+
+        # Nur eine Zahl
+        counts_dict = counts([3])
+        assert oberePunkte(counts_dict) == {1: 0, 2: 0, 3: 1, 4: 0, 5: 0, 6: 0}
+
+        # Sechs gleiche Zahlen (nicht möglich im echten Spiel, aber testen wir trotzdem)
+        dice = [1, 1, 1, 1, 1, 1]  # 6 Würfel
+        counts_dict = {1: 6, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}
+        assert dreierPasch(counts_dict, dice) == 6
+        assert viererPasch(counts_dict, dice) == 6
+        assert fuenferPasch(counts_dict) == 50
