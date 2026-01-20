@@ -16,7 +16,7 @@ WHITE = (255, 255, 255)
 screen = pygame.display.set_mode()
 WIDTH, HEIGHT = screen.get_size()
 pygame.display.set_caption("Kniffel von Wish bestellt")
-background_image = pygame.image.load("background.jpg").convert()
+background_image = pygame.image.load("../background.jpg").convert()
 background_image = pygame.transform.scale(surface=background_image, size=(WIDTH, HEIGHT))
 # Spielvariablen
 clock = pygame.time.Clock()

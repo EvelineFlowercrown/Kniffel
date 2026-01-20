@@ -1,10 +1,6 @@
-import user
-import point_counters as pc
-import helpers as h
+from Lib import point_counters as pc, helpers as h, game as g
 import random
 
-players = ["eve"]
-#user.playerSetup()
 
 
 def roll_dice(n):
@@ -14,7 +10,7 @@ def roll_dice(n):
     return out
 
 
-def playerTurn():
+def playerTurn(gameSheet):
     num_rolls = 0
     dice = []
     held_dice = []
@@ -23,14 +19,38 @@ def playerTurn():
         dice = roll_dice(5 - len(held_dice))
         print("dein wurf:", dice, "behaltene:", held_dice)
         if len(held_dice) < 5:
-            for n in range(h.get_integer_input("wie viele würfel willst du behalten")):
-                choice = dice.pop(h.get_integer_input(f"welchen würfel möchtest du behalten? (Position: 0-{len(dice) - 1})"))
+
+            behalten = None
+            while behalten == None:
+                behalten = h.get_integer_input("wie viele würfel willst du behalten? ")
+                if behalten > len(dice):
+                    print(f"{behalten} ist ungültig. wähle aus 0 -", len(dice))
+                    behalten = None
+            if behalten == len(dice):
+                held_dice.append(dice)
+                held_dice = []
+                break
+            for n in range(behalten):
+                choice = dice.pop(
+                    h.get_integer_input(f"welchen würfel möchtest du behalten? (Position: 1-{len(dice)}) ") - 1)
                 held_dice.append(choice)
                 print("dein wurf:", dice, "behaltene:", held_dice)
             num_rolls += 1
-    print(dice,held_dice)
-    final_dice = dice+held_dice
-    print(pc.counts(final_dice))
+        else:
+            break
+    print(dice, held_dice)
+    final_dice = dice + held_dice
+    print("Wähle aus folgenden Optionen:")
+    final_options = pc.getPointOptions(final_dice,gameSheet.getAvailable())
+    for name, points in final_options:
+        print(f"{name}:", points, "Punkte")
+    choice = final_options.pop(h.get_integer_input(f"Welches Feld möchstest du ausfüllen? (Position: 1-{len(final_options)}) ") - 1)
+    gameSheet.points[choice[0]] = choice[1]
 
-
-playerTurn()
+gameSheet = g.GameSheet("Eveline")
+if gameSheet.getAvailable() is None:
+    playerTurn(gameSheet)
+    gameSheet.printTable()
+while len(gameSheet.getAvailable()) > 0:
+    playerTurn(gameSheet)
+    gameSheet.printTable()
