@@ -53,6 +53,3 @@ if gameSheet.getAvailable() is None:
 while len(gameSheet.getAvailable()) > 0:
     playerTurn(gameSheet)
     gameSheet.printTable()
-
-
-# endregion penis

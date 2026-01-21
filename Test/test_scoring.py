@@ -90,11 +90,24 @@ class TestKniffelFunctions:
         # Kleine Straße vorhanden (3-4-5-6)
         assert kleineStrasse([3, 4, 5, 6, 6]) == 30
 
-        # Ohne kleine Straße
-        assert kleineStrasse([1, 3, 4, 5, 6]) == 0
+        # Kleine Straße vorhanden (3-4-5-6)
+        assert kleineStrasse([1, 3, 4, 5, 6]) == 30
 
         # Große Straße (sollte auch kleine Straße sein)
         assert kleineStrasse([1, 2, 3, 4, 5]) == 30
+
+        # keine Straße
+        assert kleineStrasse([1, 2, 4, 5, 6]) == 0
+
+        # keine Straße
+        assert kleineStrasse([1, 2, 3, 5, 6]) == 0
+
+        # keine Straße
+        assert kleineStrasse([2, 2, 3, 3, 3]) == 0
+
+        # keine Straße
+        assert kleineStrasse([2, 2, 2, 2, 2]) == 0
+
 
     # Test für grosseStrasse()
     def test_grosseStrasse(self):
@@ -192,7 +205,7 @@ class TestKniffelFunctions:
 
         # Nur eine Zahl
         counts_dict = counts([3])
-        assert oberePunkte(counts_dict) == {1: 0, 2: 0, 3: 1, 4: 0, 5: 0, 6: 0}
+        assert oberePunkte(counts_dict) == {1: 0, 2: 0, 3: 3, 4: 0, 5: 0, 6: 0}
 
         # Sechs gleiche Zahlen (nicht möglich im echten Spiel, aber testen wir trotzdem)
         dice = [1, 1, 1, 1, 1, 1]  # 6 Würfel
