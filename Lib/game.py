@@ -1,6 +1,5 @@
 class GameSheet:
-    def __init__(self, player):
-        self.player = player
+    def __init__(self):
         self.points = {
             "Nur 1er zählen": None,
             "Nur 2er zählen": None,
