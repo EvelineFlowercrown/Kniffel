@@ -1,11 +1,30 @@
 import os
 
 
+def pause_menu():
+    print("\n--- PAUSEMENÜ ---")
+    print("1 - Spiel fortsetzen")
+    print("2 - Spiel beenden")
+    choice = input("Auswahl: ")
+    if choice == "2":
+        raise GameExit()
+
+
+def get_input(prompt: str) -> str:
+    value = input(prompt)
+
+    if value.lower() in ("m", "menu", "q"):
+        pause_menu()
+        return get_input(prompt)  # nach Menü zurück ins Spiel
+
+    return value
+
+
 def get_integer_input(text):
     zahl = None
     while not zahl:
         try:
-            return int(input(text))
+            return int(get_input(text))
         except:
             print("bitte gib eine ganze zahl ein")
 
@@ -22,3 +41,7 @@ def get_integer_input_upto(text,maxInput):
             print(f"{inputNumber} ist ungültig. wähle aus 0 -", maxInput)
             inputNumber = None
     return inputNumber
+
+
+class GameExit(Exception):
+    pass

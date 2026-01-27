@@ -51,13 +51,17 @@ class GameSheet:
             print(f"{category:<{col_width}} | {display_value}")
 
         print(line)
-
         print(line)
 
     def calculate_extras(self):
-        if all(punkte is not None for punkte in self.obere):
-            self.extras["Gesamt Oberer Teil"] = sum(self.obere)
-        if all(punkte is not None for punkte in self.untere):
-            self.extras["Gesamt Unterer Teil"] = sum(self.untere)
+        if all(punkte is not None for punkte in self.obere.values()):
+            self.extras["Gesamt Oberer Teil"] = sum(self.obere.values())
+        if all(punkte is not None for punkte in self.untere.values()):
+            self.extras["Gesamt Unterer Teil"] = sum(self.untere.values())
         self.extras["Bonus 63+"] = 35 if self.extras["Gesamt Oberer Teil"] >= 63 else 0
+
+    def get_total(self):
         return sum([self.extras["Gesamt Oberer Teil"], self.extras["Gesamt Unterer Teil"], self.extras["Bonus 63+"]])
+
+    def is_complete(self):
+        return len(self.getAvailable()) == 0
