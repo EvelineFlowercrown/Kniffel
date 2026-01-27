@@ -27,7 +27,7 @@ def viererPasch(counts, dice):
 
 
 def fuenferPasch(counts):
-    if any(c >= 5 for c in counts.values()):
+    if max(counts.values()) == 5:
         return 50
     else:
         return 0

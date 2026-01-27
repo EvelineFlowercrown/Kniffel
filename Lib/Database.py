@@ -16,7 +16,7 @@ class SQLiteDB:
             self.connection = sqlite3.connect(self.db_name)
             self.connection.row_factory = sqlite3.Row  # Ermöglicht Spaltenzugriff per Name
             self.cursor = self.connection.cursor()
-            print(f"✓ Verbindung zu '{self.db_name}' hergestellt")
+            #print(f"✓ Verbindung zu '{self.db_name}' hergestellt")
         except sqlite3.Error as e:
             print(f"✗ Verbindungsfehler: {e}")
 
@@ -38,7 +38,7 @@ class SQLiteDB:
         try:
             self.cursor.execute(sql)
             self.connection.commit()
-            print(f"✓ Tabelle '{table_name}' erstellt/geprüft")
+            #print(f"✓ Tabelle '{table_name}' erstellt/geprüft")
         except sqlite3.Error as e:
             print(f"✗ Fehler beim Erstellen der Tabelle: {e}")
 
@@ -63,7 +63,7 @@ class SQLiteDB:
             self.cursor.execute(sql, values)
             self.connection.commit()
             last_id = self.cursor.lastrowid
-            print(f"✓ Datensatz in '{table_name}' eingefügt (ID: {last_id})")
+            #print(f"✓ Datensatz in '{table_name}' eingefügt (ID: {last_id})")
             return last_id
         except sqlite3.Error as e:
             print(f"✗ Fehler beim Einfügen: {e}")
@@ -86,7 +86,7 @@ class SQLiteDB:
         try:
             self.cursor.execute(sql)
             rows = self.cursor.fetchall()
-            print(f"✓ {len(rows)} Datensätze aus '{table_name}' gelesen")
+            #print(f"✓ {len(rows)} Datensätze aus '{table_name}' gelesen")
             return rows
         except sqlite3.Error as e:
             print(f"✗ Fehler beim Lesen: {e}")
@@ -119,7 +119,7 @@ class SQLiteDB:
         try:
             self.cursor.execute(sql, values)
             rows = self.cursor.fetchall()
-            print(f"✓ {len(rows)} Datensätze mit Bedingungen gefunden")
+            #print(f"✓ {len(rows)} Datensätze mit Bedingungen gefunden")
             return rows
         except sqlite3.Error as e:
             print(f"✗ Fehler bei selektiver Abfrage: {e}")
@@ -149,7 +149,7 @@ class SQLiteDB:
             self.cursor.execute(sql, values)
             self.connection.commit()
             affected = self.cursor.rowcount
-            print(f"✓ {affected} Datensätze in '{table_name}' aktualisiert")
+            #print(f"✓ {affected} Datensätze in '{table_name}' aktualisiert")
             return affected
         except sqlite3.Error as e:
             print(f"✗ Fehler beim Aktualisieren: {e}")
@@ -174,7 +174,7 @@ class SQLiteDB:
             self.cursor.execute(sql, values)
             self.connection.commit()
             affected = self.cursor.rowcount
-            print(f"✓ {affected} Datensätze aus '{table_name}' gelöscht")
+            #print(f"✓ {affected} Datensätze aus '{table_name}' gelöscht")
             return affected
         except sqlite3.Error as e:
             print(f"✗ Fehler beim Löschen: {e}")
@@ -201,7 +201,7 @@ class SQLiteDB:
             else:
                 self.connection.commit()
                 affected = self.cursor.rowcount
-                print(f"✓ Benutzerdefinierte Abfrage ausgeführt ({affected} Zeilen betroffen)")
+                #print(f"✓ Benutzerdefinierte Abfrage ausgeführt ({affected} Zeilen betroffen)")
                 return []
         except sqlite3.Error as e:
             print(f"✗ Fehler bei benutzerdefinierter Abfrage: {e}")
@@ -220,7 +220,7 @@ class SQLiteDB:
         """Schließt die Datenbankverbindung"""
         if self.connection:
             self.connection.close()
-            print("✓ Datenbankverbindung geschlossen")
+            #print("✓ Datenbankverbindung geschlossen")
 
     def __enter__(self):
         """Unterstützung für with-Kontextmanager"""
