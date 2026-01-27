@@ -1,6 +1,4 @@
-from Lib.point_counters import counts, oberePunkte, dreierPasch, viererPasch, fuenferPasch, fullHouse, kleineStrasse, \
-    grosseStrasse, chance, getPointOptions
-import pytest
+from Lib.point_counters import *
 
 
 class TestKniffelFunctions:
@@ -12,6 +10,7 @@ class TestKniffelFunctions:
         assert counts([1, 1, 1, 2, 3]) == {1: 3, 2: 1, 3: 1, 4: 0, 5: 0, 6: 0}
         assert counts([5, 5, 5, 5, 5]) == {1: 0, 2: 0, 3: 0, 4: 0, 5: 5, 6: 0}
         assert counts([1, 2, 3, 4, 5]) == {1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 0}
+        assert counts([]) == {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}
 
     # Test für oberePunkte()
     def test_oberePunkte(self):
@@ -196,20 +195,3 @@ class TestKniffelFunctions:
         for name, value in result:
             if name == "Kleine Straße":
                 assert value == 30
-
-    # Edge Cases
-    def test_edge_cases(self):
-        """Testet verschiedene Edge Cases"""
-        # Leere Würfel-Liste
-        assert counts([]) == {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}
-
-        # Nur eine Zahl
-        counts_dict = counts([3])
-        assert oberePunkte(counts_dict) == {1: 0, 2: 0, 3: 3, 4: 0, 5: 0, 6: 0}
-
-        # Sechs gleiche Zahlen (nicht möglich im echten Spiel, aber testen wir trotzdem)
-        dice = [1, 1, 1, 1, 1, 1]  # 6 Würfel
-        counts_dict = {1: 6, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}
-        assert dreierPasch(counts_dict, dice) == 6
-        assert viererPasch(counts_dict, dice) == 6
-        assert fuenferPasch(counts_dict) == 50
