@@ -1,5 +1,5 @@
 import sqlite3
-from typing import List, Optional, Any, Dict, Tuple
+from typing import List, Any, Dict, Tuple
 
 
 class SQLiteDB:
@@ -226,6 +226,6 @@ class SQLiteDB:
         """Unterstützung für with-Kontextmanager"""
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self):
         """Automatisches Schließen im with-Block"""
         self.close()

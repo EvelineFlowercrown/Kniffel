@@ -66,7 +66,7 @@ class TestPlayer(unittest.TestCase):
     @patch("Lib.helpers.get_integer_input")
     def test_choose_option(self, mock_input):
         options = [("Dreierpasch", 9), ("Chance", 15)]
-        mock_input.return_value = "2"  # wählt Chance
+        mock_input.return_value = 2  # wählt Chance
         choice = self.player.choose_option(options)
         self.assertEqual(choice, ("Chance", 15))
 
