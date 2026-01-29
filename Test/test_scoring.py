@@ -1,7 +1,9 @@
+import unittest
+
 from Lib.point_counters import *
 
 
-class TestKniffelFunctions:
+class TestScoring(unittest.TestCase):
     """Testklasse für die Kniffel/Yahtzee-Funktionen"""
 
     # Test für counts()

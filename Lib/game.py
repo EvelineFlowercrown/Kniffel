@@ -23,8 +23,7 @@ class GameSheet:
         self.extras = {
             "Gesamt Oberer Teil": None,
             "Bonus 63+": None,
-            "Gesamt Unterer Teil": None,
-            "Kniffel Bonus": None
+            "Gesamt Unterer Teil": None
         }
 
     def getAvailable(self):
@@ -69,7 +68,10 @@ class GameSheet:
             self.extras["Bonus 63+"] = 35 if self.extras["Gesamt Oberer Teil"] >= 63 else 0
 
     def get_total(self):
-        return sum([self.extras["Gesamt Oberer Teil"], self.extras["Gesamt Unterer Teil"], self.extras["Bonus 63+"]])
+        try:
+            return sum([self.extras["Gesamt Oberer Teil"], self.extras["Gesamt Unterer Teil"], self.extras["Bonus 63+"]])
+        except:
+            raise ValueError("None value in Gamesheet.extras")
 
     def is_complete(self):
         return len(self.getAvailable()) == 0
