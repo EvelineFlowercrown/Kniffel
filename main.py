@@ -83,5 +83,5 @@ if __name__ == "__main__":
     try:
         main()
     except GameExit:
-        print("Spiel Beendet")
+        print("Spiel beendet.")
         exit(0)

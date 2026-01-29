@@ -12,21 +12,17 @@ def pause_menu():
 
 def get_input(prompt: str) -> str:
     value = input(prompt)
-
     if value.lower() in ("m", "menu", "q"):
         pause_menu()
-        return get_input(prompt)  # nach Menü zurück ins Spiel
-
     return value
 
 
 def get_integer_input(text):
-    zahl = None
-    while not zahl:
+    while True:
         try:
             return int(get_input(text))
-        except:
-            print("bitte gib eine ganze zahl ein")
+        except ValueError:
+            print("bitte gib eine ganze Zahl ein")
 
 
 def clear():

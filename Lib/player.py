@@ -34,7 +34,7 @@ class Player:
 
         while num_rolls < 3:
             dice = dice_class.roll_dice(5 - len(held_dice))
-            print("dein wurf:", dice, "behaltene:", held_dice)
+            print("Fein Wurf:", dice, "Behaltene:", held_dice)
 
             if len(held_dice) >= 5:
                 break
@@ -50,6 +50,7 @@ class Player:
                 break
 
             for _ in range(behalten):
+                print("Würfel:", dice, "Behaltene:", held_dice)
                 index = helpers.get_integer_input(
                     f"welchen würfel möchtest du behalten? (Position: 1-{len(dice)}) "
                 ) - 1
